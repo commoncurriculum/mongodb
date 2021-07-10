@@ -64,7 +64,11 @@ defmodule Mongo.PBKDF2 do
     iterate(fun, iteration - 1, next, :crypto.exor(next, acc))
   end
 
-  defp mac_fun(digest, secret) do
-    &:crypto.hmac(digest, secret, &1)
+  if Code.ensure_loaded?(:crypto) and function_exported?(:crypto, :mac, 4) do
+    # Supports Erlang / OTP v24 and above
+    defp mac_fun(digest, secret), do: &:crypto.mac(:hmac, digest, secret, &1)
+  else
+    # Supports Erlang / OTP older than v24
+    defp mac_fun(digest, secret), do: &:crypto.hmac(digest, secret, &1)
   end
 end
