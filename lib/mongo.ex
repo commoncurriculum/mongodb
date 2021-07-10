@@ -343,7 +343,11 @@ defmodule Mongo do
   @doc false
   @spec count(GenServer.server(), collection, BSON.document(), Keyword.t()) ::
           result(non_neg_integer)
-  def count(topology_pid, coll, filter, opts \\ []) do
+  def count(topology_pid, coll, filter, opts \\ [])
+
+  def count(topology_pid, coll, filter, opts) when is_list(filter), do: count(topology_pid, coll, filter |> Enum.into(%{}), opts)
+
+  def count(topology_pid, coll, filter, opts) do
     query =
       filter_nils(
         count: coll,

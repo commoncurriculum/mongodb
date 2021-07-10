@@ -130,7 +130,7 @@ defmodule Mongo.Test do
   test "count", c do
     coll = unique_name()
 
-    assert {:ok, 0} = Mongo.count(c.pid, coll, %{})
+    assert {:ok, 0} = Mongo.count(c.pid, coll, [])
 
     assert {:ok, _} = Mongo.insert_one(c.pid, coll, %{foo: 42})
     assert {:ok, _} = Mongo.insert_one(c.pid, coll, %{foo: 43})
